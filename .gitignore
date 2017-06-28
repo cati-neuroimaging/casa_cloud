@@ -1,3 +1,9 @@
+*.egg-info
+*.pyc
+VENV
+*.swap
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
