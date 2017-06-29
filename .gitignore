@@ -1,7 +1,7 @@
 *.egg-info
 *.pyc
 VENV
-*.swap
+*.swp
 tmp
 *.sqlite
 

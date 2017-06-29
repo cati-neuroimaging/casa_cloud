@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+
+import ConfigParser, os
+
+from casa_cloud.models import init_schema
+import argparse
+
+
+if __name__ == "__main__":
+    default_settings_file = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "..",
+        "development.ini")
+    parser = argparse.ArgumentParser(description='Initialize the database schema.')
+    parser.add_argument('config_file', nargs='?', type=str, help='path to the init file',
+                        default=[default_settings_file, ])
+    parser.add_argument('--apache_conf', dest="apache_conf",
+                        type=str, help='path to the apache conf file',
+                        required=True,)
+    options = parser.parse_args()
+
+    apache_conf = options.apache_conf
+
+    config_file = options.config_file[0]
+    config = ConfigParser.ConfigParser()
+    config.readfp(open(os.path.expanduser(config_file)))
+    local_min_available_port = os.path.expanduser(config.get("app:main", "local_min_available_port"))
+    local_max_available_port = os.path.expanduser(config.get("app:main", "local_max_available_port"))
+
+    local_min_available_port = int(local_min_available_port)
+    local_max_available_port = int(local_max_available_port)
+
+    apache_url_prefix = os.path.expanduser(config.get("app:main", "apache_url_prefix"))
+
+    #ProxyPass          /novnc_6080 http://127.0.0.1:6080
+    #ProxyPassReverse   /novnc_6080 http://127.0.0.1:6080
+    #ProxyPass          /websockify_6080 ws://127.0.0.1:6080/websockify
+    #ProxyPassReverse   /websockify_6080 ws://127.0.0.1:6080/websockify
+
+    apache_conf = options.apache_conf
+    file_apache_conf = open(apache_conf, "w+")
+    for i in range(local_min_available_port, local_max_available_port):
+        data = {"port": int(i)}
+        line = "ProxyPass " + apache_url_prefix + "novnc_%(port)d " + "http://127.0.0.1:%(port)d\n"
+        line = line % data
+
+        file_apache_conf.write(line)
+        line = "ProxyPassReverse " + apache_url_prefix + "novnc_%(port)d " + "http://127.0.0.1:%(port)d\n"
+        line = line % data
+
+        file_apache_conf.write(line)
+        line = "ProxyPass " + apache_url_prefix + "websockify_%(port)d " + "ws://127.0.0.1:%(port)d/websockify\n"
+        line = line % data
+
+        file_apache_conf.write(line)
+        line = "ProxyPassReverse " + apache_url_prefix + "websockify_%(port)d " + "ws://127.0.0.1:%(port)d/websockify\n"
+        line = line % data
+
+        file_apache_conf.write(line)
+        file_apache_conf.write("\n\n")
+    file_apache_conf.close()
