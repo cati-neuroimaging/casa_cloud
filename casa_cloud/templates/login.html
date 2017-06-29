@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action="{{url}}" class="form-signin" method="post">
+    <input type="hidden" name="came_from" value="{{came_from}}">
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <label for="login" class="sr-only">Login</label>
+    <input id="login" name="login" class="form-control" placeholder="login" required="" autofocus="" value="{{login}}">
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required="" value="{{password}}">
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
+</form>
+
+{% endblock %}
+

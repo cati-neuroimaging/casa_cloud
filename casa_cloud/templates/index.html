@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+
+        <!-- Title -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>New Machine</h3>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <form method="POST">
+          <div class="form-group">
+            <label for="expiry_date">Expiry Date</label>
+            <input type="date" class="form-control" id="expiry_date" placeholder="Expiry Date" name="expiry_date">
+          </div>
+          <div class="form-group">
+            <label for="cpu_cores">CPU cores</label>
+            <select class="form-control" id="cpu_cores" name="cpu_cores">
+              {% for cpu_core in cpu_core_options %}
+                  <option value="{{cpu_core}}">{{cpu_core}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="memory">Memory (G)</label>
+            <select class="form-control" id="memory" name="memory">
+              {% for memory in memory_options %}
+                  <option value="{{memory}}">{{memory}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-large">Add Machine</button>
+        </form>
+
+        {% if not is_success %}
+        <div class="alert alert-danger">
+          <strong>Error!</strong> {{error_message}}
+        </div>
+        {% endif %}
+
+
+        <hr>
+        <!-- Title -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Machines on Cloud</h3>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Page Features -->
+        <div class="row text-center">
+
+
+        {% for machine in render_machines %}
+
+            <form method="POST">
+                <div class="col-md-3 col-sm-6 hero-feature">
+                    <div class="thumbnail">
+                        <img src="static/images/logo_computer.jpg" alt="">
+                        <div class="caption">
+                            
+                            <h3>Machine {{ machine.container_port }}</h3>
+                            <p>CPU Cores {{machine.cpu_cores}}, Memory {{machine.memory}} G</p>
+                            <p> Password: <input type="password" onmouseover="mouseOverListenerFunc(this)" onmouseout="mouseOutListenerFunc(this)" value='{{machine.vnc_pw}}' /></p>
+                            <p>
+                                <input type="hidden" name="del_machine_port" value={{ machine.container_port }}>
+                                <button type="submit" class="btn btn-primary btn-large">Delete</button> <a href="#" class="btn btn-default">Connect</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+         {% endfor %}
+
+
+        </div>
+        <!-- /.row -->
+
+
+{% endblock %}
+
+
