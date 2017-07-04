@@ -52,6 +52,11 @@ class Machines(object):
         self.db_path = settings["sqlite_data"]
         self.image_name = settings["docker_image_name"]
         self.exposed_port = int(settings["docker_image_exposed_port"])
+        self.noVNC_dir_in_container = settings["docker_image_novnc_dir"]
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        self.noVNC_index = os.path.join(dir_path, "..", "data", "vnc_casa.html")
+        if not os.path.isfile(self.noVNC_index):
+            raise ValueError("Fail to find %s" % self.noVNC_index)
         self.local_ports = local_ports
 
     @staticmethod
@@ -62,8 +67,7 @@ class Machines(object):
         for sql in sqls:
             c.execute(sql)
 
-    def create_docker_container(self, available_port, cpu_cores, memory):
-        
+    def create_docker_container(self, available_port, cpu_cores, memory, password):
         mem_limit = "%dg" % memory
         client = docker.from_env()
         ports = {}
@@ -73,7 +77,19 @@ class Machines(object):
         out = subprocess.check_output(cmd)
         lines = out.split()
         container_id = lines[-1].strip()
+        cmd = ["docker", "cp", self.noVNC_index, '%s:%s' % (container_id, self.noVNC_dir_in_container), ]
+        out = subprocess.check_output(cmd)
+        cmd = ["docker", "exec", "-d", container_id, 
+            "/bin/bash", "-c", "echo '%s' > /tmp/pwd && cat /tmp/pwd | vncpasswd -f > $HOME/.vnc/passwd && chmod go-r $HOME/.vnc/passwd && rm /tmp/pwd" % password]
+        out = subprocess.check_output(cmd)
+        cmd = ["docker", "exec", "-d", container_id, "/usr/bin/vncserver", "-kill", ":1"]
+        out = subprocess.check_output(cmd)
+        cmd = ["docker", "exec", "-d", container_id, "/home/brainvisa/docker_entrypoint"]
+        out = subprocess.check_output(cmd)
         return container_id
+
+    def vnc_config(self, password, ):
+        pass
 
     def create_machine(self, login, cpu_cores, memory, expiry_date):
         cpu_cores = int(cpu_cores)
@@ -81,7 +97,7 @@ class Machines(object):
         vnc_pw = generate_temp_password(8)
         ## create a container 
         available_port = self.local_ports.allocate()
-        container_id = self.create_docker_container(available_port, cpu_cores, memory)
+        container_id = self.create_docker_container(available_port, cpu_cores, memory, password=vnc_pw)
         #container_id = container.id
         sql = "INSERT INTO user_machines VALUES ('%(login)s', %(available_port)d, '%(container_id)s', %(memory)d, %(cpu_cores)d, '%(expiry_date)s', '%(vnc_pw)s')"
         data = {}

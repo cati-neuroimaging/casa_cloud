@@ -8,7 +8,6 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from .models import appmaker
 from .security import groupfinder
 
-
 def root_factory(request):
     data = {}
     return appmaker(data)
@@ -26,7 +25,10 @@ def main(global_config, **settings):
     settings = config.get_settings()
 
     settings['tm.manager_hook'] = 'pyramid_tm.explicit_manager'
-
+    website_base_url = settings["website_base_url"]
+    if website_base_url.endswith("/"):
+        website_base_url = website_base_url[:-1]
+    settings["website_base_url"] = website_base_url
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(authz_policy)
 

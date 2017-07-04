@@ -54,11 +54,9 @@ def view_home(request):
         if diff_time.seconds < 10*60:
             is_lock_create_machine = True
 
-
     names, values = machines.search_machines(login)
     if len(values) >= docker_container_max_num_containers:
        can_add_machine = False
-
 
     if request.POST:
        if "del_machine_port" in request.POST:
@@ -87,7 +85,6 @@ def view_home(request):
                    error_message = "You should use at least %d days" % min_days_to_use
                if os.path.isfile(docker_container_create_lock_file):
                    os.remove(docker_container_create_lock_file)
-
 
     names, values = machines.search_machines(login)
     render_machines = []
@@ -130,7 +127,7 @@ def view_login(request):
         message = 'Failed login'
     return dict(
         message=message,
-        url=request.application_url + '/login',
+        url=request.registry.settings["website_base_url"] + '/login',
         came_from=came_from,
         login=login,
         password=password,
