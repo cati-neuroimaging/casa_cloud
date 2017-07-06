@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import ConfigParser, os
-
 from casa_cloud.models import init_schema
 import argparse
 
@@ -23,6 +22,7 @@ if __name__ == "__main__":
     config_file = options.config_file[0]
     config = ConfigParser.ConfigParser()
     config.readfp(open(os.path.expanduser(config_file)))
+
     local_min_available_port = os.path.expanduser(config.get("app:main", "local_min_available_port"))
     local_max_available_port = os.path.expanduser(config.get("app:main", "local_max_available_port"))
 
@@ -42,19 +42,16 @@ if __name__ == "__main__":
         data = {"port": int(i)}
         line = "ProxyPass " + apache_url_prefix + "novnc_%(port)d " + "http://127.0.0.1:%(port)d\n"
         line = line % data
-
         file_apache_conf.write(line)
         line = "ProxyPassReverse " + apache_url_prefix + "novnc_%(port)d " + "http://127.0.0.1:%(port)d\n"
         line = line % data
-
         file_apache_conf.write(line)
         line = "ProxyPass " + apache_url_prefix + "websockify_%(port)d " + "ws://127.0.0.1:%(port)d/websockify\n"
         line = line % data
-
         file_apache_conf.write(line)
         line = "ProxyPassReverse " + apache_url_prefix + "websockify_%(port)d " + "ws://127.0.0.1:%(port)d/websockify\n"
         line = line % data
-
         file_apache_conf.write(line)
         file_apache_conf.write("\n\n")
     file_apache_conf.close()
+

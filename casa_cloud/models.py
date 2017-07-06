@@ -67,7 +67,7 @@ class Machines(object):
         for sql in sqls:
             c.execute(sql)
 
-    def create_docker_container(self, available_port, cpu_cores, memory, password):
+    def __create_docker_container(self, available_port, cpu_cores, memory, password):
         mem_limit = "%dg" % memory
         client = docker.from_env()
         ports = {}
@@ -88,8 +88,27 @@ class Machines(object):
         out = subprocess.check_output(cmd)
         return container_id
 
-    def vnc_config(self, password, ):
-        pass
+    def create_docker_container(self, available_port, cpu_cores, memory, password):
+
+        container_id = self.__create_docker_container(available_port, cpu_cores, memory, password)
+        client = docker.from_env()
+        container = client.containers.get(container_id)
+        if container.status == "running":
+            return container_id
+        ## sometimes there is a port error
+        ## we have to create the container again
+        ## ```
+        ## return getattr(self._sock,name)(*args)
+        ## socket.error: [Errno 98] Address already in use
+        ## Failed to start WebSockets proxy
+        ## ```
+        print("try to create container again...")
+        cmd = "docker stop %(container_id)s && docker rm %(container_id)s" % {"container_id": container_id}
+        print(cmd)
+        os.system(cmd)
+        time.sleep(5)
+        container_id = self.__create_docker_container(available_port, cpu_cores, memory, password)
+        return container_id
 
     def create_machine(self, login, cpu_cores, memory, expiry_date):
         cpu_cores = int(cpu_cores)
@@ -125,6 +144,7 @@ class Machines(object):
         row = c.fetchone()
         container_id = row[0]
         cmd = "docker stop %s && docker rm %s" % (container_id, container_id)
+        print(cmd)
         os.system(cmd)
         sql = "DELETE FROM user_machines WHERE user_login='%s' and container_port=%d" % (login, int(container_port))
         c.execute(sql) 
