@@ -58,5 +58,21 @@ Include conf.d.http/
 </VirtualHost>
 ```
 
-You can add the `casa_cloud.conf` and `casa_novnc.conf` into `/etc/apache2/conf.d.http`.
+Apache Configuration
+----------------------------
 
+You can add the `casa_cloud.conf` and `casa_novnc.conf` into `/etc/apache2/conf.d.http`. You can see the directory structure in the `conf.d.http`.
+
+```
+$ ls /etc/apache2/conf.d.http
+casa_cloud.conf  casa_novnc.conf
+```
+
+`casa_cloud.conf` is shown as above content. `casa_novnc.conf` can be generated via the below command.
+
+```
+$ cd /path/to/casa_cloud
+$ ./bin/casa_cloud_init_apache_conf development.ini --apache_conf /tmp/casa_novnc.conf
+$ sudo mv /tmp/casa_novnc.conf /etc/apache2/conf.d.http/
+$ sudo service apache2 restart
+```
