@@ -21,9 +21,18 @@ $ pserve development.ini
 
 Usually you can start the server as above. The file `development.ini` contains many parameters including for example which docker image will be started as container.
 
+Docker-Based Image
+-----------------------------
+
+casa_cloud will create a container for each user. The docker image of this container is defined in the option `docker_image_name` of `development.ini`. There is an example of docker image is located in `/path/to/casa_cloud/docker`. You can build base image using the bash script as shown as below:
+
+```
+$ cd /path/to/casa_cloud/docker
+$ ./build_image.sh
+```
+
 Apache Configuration
 ------------------------------
-
 
 This global installation is based on the ubuntu system with apache frontend.
 
