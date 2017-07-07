@@ -7,6 +7,8 @@ Remote access to CASA tools via a graphical X session in a browser.
 casa_cloud install
 -------------------------
 
+We first install the casa_cloud server in the path `~/casa_cloud`.
+
 ```
 $ git clone git@github.com:cati-neuroimaging/casa_cloud.git ~/casa_cloud
 $ mkdir ~/casa_cloud_env
@@ -17,10 +19,10 @@ $ python setup.py develop
 $ pserve development.ini
 ```
 
-Usually you can start the server as above. The file `development.ini` contains many parameters including which docker image will be started as container.
+Usually you can start the server as above. The file `development.ini` contains many parameters including for example which docker image will be started as container.
 
-Installation
-------------
+Apache Configuration
+------------------------------
 
 
 This global installation is based on the ubuntu system with apache frontend.
@@ -65,12 +67,7 @@ ProxyPassReverse /websockify_30001 ws://127.0.0.1:30001/websockify
 ...
 ```
 
-
-
-Apache Configuration
-----------------------------
-
-First you need to configure the apache frontend. We assume that your apache site configuration file is located with the path `/etc/apache2/sites-available/000-default.conf`. You can add the `Include conf.d.http/` inside of site config.
+Now we start to configure apache. You need to configure the apache frontend. We assume that your apache site configuration file is located with the path `/etc/apache2/sites-available/000-default.conf`. You can add the `Include conf.d.http/` inside of site config.
 
 ```
 <VirtualHost *:80>
