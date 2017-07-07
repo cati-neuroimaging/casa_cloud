@@ -1,1 +1,1 @@
-docker build -t jinpengli/casa_cloud -f Dockerfile ./
+docker build -t cati/casa_cloud -f Dockerfile ./
