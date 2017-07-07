@@ -49,7 +49,13 @@ ProxyPassReverse /websockify_30001 ws://127.0.0.1:30001/websockify
 ...
 ```
 
-First you need to configurate the apache frontend. We assume that your apache site configuration file is located with the path `/etc/apache2/sites-available/000-default.conf`. You can add the `Include conf.d.http/` inside of site config.
+
+
+Apache Configuration
+----------------------------
+
+First you need to configure the apache frontend. We assume that your apache site configuration file is located with the path `/etc/apache2/sites-available/000-default.conf`. You can add the `Include conf.d.http/` inside of site config.
+
 ```
 <VirtualHost *:80>
 ...
@@ -58,10 +64,7 @@ Include conf.d.http/
 </VirtualHost>
 ```
 
-Apache Configuration
-----------------------------
-
-You can add the `casa_cloud.conf` and `casa_novnc.conf` into `/etc/apache2/conf.d.http`. You can see the directory structure in the `conf.d.http`.
+You need to add the `casa_cloud.conf` and `casa_novnc.conf` into `/etc/apache2/conf.d.http`. You can see the directory structure in the `conf.d.http`.
 
 ```
 $ ls /etc/apache2/conf.d.http
