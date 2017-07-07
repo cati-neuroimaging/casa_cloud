@@ -3,6 +3,22 @@ casa-cloud
 
 Remote access to CASA tools via a graphical X session in a browser.
 
+
+casa_cloud install
+-------------------------
+
+```
+$ git clone git@github.com:cati-neuroimaging/casa_cloud.git ~/casa_cloud
+$ mkdir ~/casa_cloud_env
+$ virtualenv ~/casa_cloud_env
+$ source ~/casa_cloud_env/bin/activate
+$ cd ~/casa_cloud
+$ python setup.py develop
+$ pserve development.ini
+```
+
+Usually you can start the server as above. The file `development.ini` contains many parameters including which docker image will be started as container.
+
 Installation
 ------------
 
