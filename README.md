@@ -101,3 +101,13 @@ $ ./bin/casa_cloud_init_apache_conf development.ini --apache_conf /tmp/casa_novn
 $ sudo mv /tmp/casa_novnc.conf /etc/apache2/conf.d.http/
 $ sudo service apache2 restart
 ```
+
+
+Check the server
+---------------
+
+Usually, you can visit the server using the below url in your browser:
+
+```
+http://localhost/casa_cloud/
+```
