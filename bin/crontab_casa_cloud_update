@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+
+import ConfigParser, os
+
+from casa_cloud.models import init_schema
+from casa_cloud.models import CasaCloud, Machines, LocalPorts
+import argparse
+
+
+if __name__ == "__main__":
+
+    default_settings_file = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "..",
+        "development.ini")
+    parser = argparse.ArgumentParser(description='Update the system, for example '\
+                                     'remove expired users.')
+    parser.add_argument('config_file', nargs='?', type=str, help='path to the init file',
+                        default=[default_settings_file, ])
+    options = parser.parse_args()
+    config_file = options.config_file[0]
+    config = ConfigParser.ConfigParser()
+    config.readfp(open(os.path.expanduser(config_file)))
+    sqlite_data_path = os.path.expanduser(config.get("app:main", "sqlite_data"))
+    settings = {}
+    for option in config.options("app:main"):
+        settings[option] = config.get("app:main", option)
+    local_ports = LocalPorts(settings)
+    machines = Machines(local_ports, settings)
+    machines.remove_expired_machines()
+

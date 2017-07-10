@@ -2,6 +2,8 @@ import sqlite3
 import docker
 import os
 import subprocess
+from dateutil import parser
+from datetime import datetime
 
 from pyramid.security import (
     Allow,
@@ -11,6 +13,7 @@ from pyramid.security import (
 glob_conn = None
 
 def get_conn(db_path, ):
+    db_path = os.path.expanduser(db_path)
     #global glob_conn
     #if glob_conn is None:
     ## sqlite cannot share connection
@@ -150,8 +153,11 @@ class Machines(object):
         c.execute(sql) 
         conn.commit()
 
-    def search_machines(self, login):
-        sql = "SELECT * from user_machines WHERE user_login = '%s'"% login
+    def search_machines(self, login=None):
+        if login is not None:
+            sql = "SELECT * from user_machines WHERE user_login = '%s'"% login
+        else:
+            sql = "SELECT * from user_machines"
         conn = get_conn(self.db_path)
         c = conn.cursor()
         ret_cursor = c.execute(sql)
@@ -161,8 +167,22 @@ class Machines(object):
             values.append(row)
         return names, values
 
-    def search_machine_by_login(self, login):
-        pass
+    def remove_expired_machines(self, ):
+        names, values = self.search_machines()
+        remove_infos = []
+        for row_values in values:
+            item = {}
+            for i, name in enumerate(names):
+                item[name] = row_values[i]
+            expiry_date_str = item["expiry_date"]
+            expiry_date = parser.parse(expiry_date_str)
+            if expiry_date < datetime.now():
+                rm_login = item["user_login"]
+                rm_port = item["container_port"]
+                remove_infos.append((rm_login, rm_port))
+        for remove_info in remove_infos:
+            rm_login, rm_port = remove_info
+            self.remove_machine(login=rm_login, container_port=rm_port)
 
 def init_schema(db_path, ):
     conn = get_conn(db_path)
