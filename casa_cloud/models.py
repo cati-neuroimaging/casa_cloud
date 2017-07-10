@@ -92,24 +92,6 @@ class Machines(object):
         return container_id
 
     def create_docker_container(self, available_port, cpu_cores, memory, password):
-
-        container_id = self.__create_docker_container(available_port, cpu_cores, memory, password)
-        client = docker.from_env()
-        container = client.containers.get(container_id)
-        if container.status == "running":
-            return container_id
-        ## sometimes there is a port error
-        ## we have to create the container again
-        ## ```
-        ## return getattr(self._sock,name)(*args)
-        ## socket.error: [Errno 98] Address already in use
-        ## Failed to start WebSockets proxy
-        ## ```
-        print("try to create container again...")
-        cmd = "docker stop %(container_id)s && docker rm %(container_id)s" % {"container_id": container_id}
-        print(cmd)
-        os.system(cmd)
-        time.sleep(5)
         container_id = self.__create_docker_container(available_port, cpu_cores, memory, password)
         return container_id
 
