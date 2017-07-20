@@ -24,7 +24,7 @@ from pyramid.security import (
     forget,
     )
 
-from .security import USERS, check_password
+from .security import authenticate
 from .models import CasaCloud, Machines, LocalPorts
 
 @view_config(context='.models.CasaCloud',
@@ -118,13 +118,13 @@ def view_login(request):
     if "login" in request.params and "password" in request.params:
         login = request.params['login']
         password = request.params['password']
-        if check_password(USERS.get(login), password):
+        if authenticate(request, login, password):
             #print("view_login correct login and password")
             #print("came_from=", came_from)
             headers = remember(request, login)
             return HTTPFound(location=came_from,
                              headers=headers)
-        message = 'Failed login'
+        message = 'Failed to login...'
     return dict(
         message=message,
         url=request.registry.settings["website_base_url"] + '/login',

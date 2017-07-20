@@ -2,6 +2,7 @@ import sqlite3
 import docker
 import os
 import subprocess
+
 from dateutil import parser
 from datetime import datetime
 
@@ -23,7 +24,6 @@ def get_conn(db_path, ):
 def generate_temp_password(length):
     if not isinstance(length, int) or length < 8:
         raise ValueError("temp password must have positive length")
-
     chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
     from os import urandom
     return "".join(chars[ord(c) % len(chars)] for c in urandom(length))
@@ -177,7 +177,7 @@ class CasaCloud(object):
     __name__ = None
     __parent__ = None
     __acl__ = [ (Allow, Everyone, 'view'),
-                (Allow, 'group:cati_users', 'can_use') ]
+                (Allow, 'group:casa_users', 'can_use') ]
 
 def appmaker(zodb_root):
     if 'app_root' not in zodb_root:

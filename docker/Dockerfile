@@ -20,7 +20,7 @@ RUN cd /tmp && \
     cd .. && \
     rm -Rf mesa-17.0.0
 
-RUN apt-get update && apt-get install -y tightvncserver wmaker x11-apps net-tools
+RUN apt-get update && apt-get install -y tightvncserver wmaker x11-apps ubuntu-desktop
 
 RUN cd /root/ && git clone https://github.com/novnc/noVNC.git && git clone https://github.com/kanaka/websockify noVNC/utils/websockify
 RUN echo 'write password' > /tmp/pwd && \
