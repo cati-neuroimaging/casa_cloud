@@ -1,5 +1,7 @@
 import bcrypt
 import importlib
+from casa_cloud.controller import ldap_authenticate
+
 
 #def demo_authenticate(request, login, password):
 #    ## temporarily test
@@ -10,6 +12,19 @@ import importlib
 #    return False
 
 def authenticate(request, login, password):
+    is_ldap_auth = True
+    ldap_fields = ["ldap_server",
+                   "ldap_admin_dn",
+                   "ldap_password_file",
+                   "ldap_user_base_dn",
+                   "ldap_user_login_field",
+                  ]
+    for ldap_field in ldap_fields:
+        if ldap_field not in request.registry.settings:
+            is_ldap_auth = False
+            break
+    if is_ldap_auth:
+        return ldap_authenticate(request, login, password)
     authenticate_function_path = request.registry.settings["authenticate_function"]
     authenticate_function_parts = authenticate_function_path.split(".")
     function_name = authenticate_function_parts[-1]

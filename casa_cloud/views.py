@@ -43,7 +43,7 @@ def view_home(request):
     min_days_to_use = int(request.registry.settings["min_days_to_use"])
     docker_container_create_lock_file = request.registry.settings["docker_container_create_lock_file"]
     docker_container_max_num_containers = int(request.registry.settings["docker_container_max_num_containers"])
-    can_add_machine = True 
+    can_add_machine = True
 
     is_lock_create_machine = False
     if os.path.isfile(docker_container_create_lock_file):
@@ -69,7 +69,6 @@ def view_home(request):
            if is_success and not can_add_machine:
                is_success = False
                error_message = "You already have max number of %d machines." % docker_container_max_num_containers
-
            if is_success:
                lock_data = {}
                lock_data["lock_time"] = datetime.now().isoformat()

@@ -22,6 +22,7 @@ requires = [
     'docutils',
     'bcrypt',
     'docker',
+    'python-ldap',
 ]
 
 tests_require = [
