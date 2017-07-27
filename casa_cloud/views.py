@@ -78,7 +78,8 @@ def view_home(request):
                expiry_date = parse(request.POST["expiry_date"])
                diff_time = datetime.now() - expiry_date
                if diff_time.days < min_days_to_use:
-                   machines.create_machine(login, cpu_cores, memory, expiry_date)
+                   additional_options = request.registry.settings.get("docker_container_start_opts", "")
+                   machines.create_machine(login, cpu_cores, memory, expiry_date, additional_options)
                else:
                    is_success = False
                    error_message = "You should use at least %d days" % min_days_to_use
