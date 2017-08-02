@@ -23,6 +23,8 @@ requires = [
     'bcrypt',
     'docker',
     'python-ldap',
+    'python-dateutil',
+    'pyramid_jinja2',
 ]
 
 tests_require = [

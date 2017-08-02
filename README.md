@@ -16,6 +16,7 @@ $ virtualenv ~/casa_cloud_env
 $ source ~/casa_cloud_env/bin/activate
 $ cd ~/casa_cloud
 $ python setup.py develop
+$ ./bin/casa_cloud_init_schema development.ini
 $ pserve development.ini
 ```
 

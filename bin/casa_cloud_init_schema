@@ -12,9 +12,9 @@ if __name__ == "__main__":
         "development.ini")
     parser = argparse.ArgumentParser(description='Initialize the database schema.')
     parser.add_argument('config_file', nargs='?', type=str, help='path to the init file',
-                        default=[default_settings_file, ])
+                        default=default_settings_file)
     options = parser.parse_args()
-    config_file = options.config_file[0]
+    config_file = options.config_file
     config = ConfigParser.ConfigParser()
     config.readfp(open(os.path.expanduser(config_file)))
     sqlite_data_path = os.path.expanduser(config.get("app:main", "sqlite_data"))
