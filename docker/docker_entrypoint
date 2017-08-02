@@ -1,3 +1,5 @@
 #! /bin/sh
+rm -rf /tmp/.X1-lock
+rm -rf /tmp/.X11-unix
 vncserver -geometry 1280x1024 :1
 $HOME/noVNC/utils/launch.sh --vnc localhost:5901 --web $HOME/noVNC --listen 8080

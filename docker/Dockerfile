@@ -29,11 +29,15 @@ RUN echo 'write password' > /tmp/pwd && \
     chmod go-r $HOME/.vnc/passwd && \
     rm /tmp/pwd
 
-RUN apt-get update && apt-get install -y python net-tools
+RUN apt-get install -y apt-utils
+RUN apt-get update && apt-get install -y python net-tools pyqt4-dev-tools python-pip python-dev build-essential python-numpy python-qt4-gl
+ 
+RUN pip install six
 ENV USER root
 RUN locale-gen
 COPY vnc_xstartup /root/.vnc/xstartup
-ENV LD_LIBRARY=/root/mesa/lib
+ENV LD_LIBRARY_PATH=/root/mesa/lib
+RUN echo "LD_LIBRARY_PATH=/root/mesa/lib" >> $HOME/.bashrc
 COPY docker_entrypoint /root/docker_entrypoint
 CMD ["/root/docker_entrypoint"]
 
