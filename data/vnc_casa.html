@@ -205,8 +205,7 @@
 
 
         var password = WebUtil.getConfigVar('password', getURLParameter('token'));
-        var port = getURLParameter("port");
-        var path = WebUtil.getConfigVar('path', 'websockify_' + port);
+        var path = WebUtil.getConfigVar('path', 'websockify_' + getURLParameter("port"));
 
         document.getElementById('sendCtrlAltDelButton').style.display = "inline";
         document.getElementById('sendCtrlAltDelButton').onclick = sendCtrlAltDel;
@@ -223,14 +222,14 @@
 
         // if port == 80 (or 443) then it won't be present and should be
         // set manually
-        if (!port) {
+        //if (!port) {
             if (window.location.protocol.substring(0,5) == 'https') {
                 port = 443;
             }
             else if (window.location.protocol.substring(0,4) == 'http') {
                 port = 80;
             }
-        }
+        //}
         // If a token variable is passed in, set the parameter in a cookie.
         // This is used by nova-novncproxy.
         var token = WebUtil.getConfigVar('token', null);
