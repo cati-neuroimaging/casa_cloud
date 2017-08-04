@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     config_file = options.config_file
     config = ConfigParser.ConfigParser()
-    print("config_file=", config_file)
+    #print("config_file=", config_file)
     config.readfp(open(os.path.expanduser(config_file)))
 
     local_min_available_port = os.path.expanduser(config.get("app:main", "local_min_available_port"))

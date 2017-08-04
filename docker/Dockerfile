@@ -8,19 +8,20 @@ ENV GL_PROTO_CFLAG /usr/local/include/GL
 RUN apt-get update && apt-get install -y git
 
 RUN cd /tmp && \
-    git clone git://anongit.freedesktop.org/xorg/proto/glproto && \
+    git clone https://github.com/JinpengLI/glproto.git && \
     cd glproto && ./autogen.sh && make && make install && \ 
     cd /tmp && \
     wget ftp://ftp.freedesktop.org/pub/mesa/mesa-17.0.0.tar.gz && \
     tar xvf mesa-17.0.0.tar.gz && \
     cd mesa-17.0.0 && \
     ./configure --enable-glx=xlib --disable-dri --disable-egl --with-gallium-drivers=swrast --disable-gbm --prefix=$HOME/mesa && \
-    make && \
+    make -j3 && \
     make install && \
     cd .. && \
     rm -Rf mesa-17.0.0
 
-RUN apt-get update && apt-get install -y tightvncserver wmaker x11-apps xfce4 xfce4-goodies
+RUN apt-get update && apt-get install -y libproxy-dev glib-networking-common
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && apt-get update && apt-get install -y tightvncserver wmaker x11-apps xfce4 xfce4-goodies
 RUN cd /root/ && git clone https://github.com/novnc/noVNC.git && git clone https://github.com/kanaka/websockify noVNC/utils/websockify
 RUN echo 'write password' > /tmp/pwd && \
     echo 'read password' >> /tmp/pwd && \
@@ -34,7 +35,6 @@ RUN apt-get update && apt-get install -y python net-tools pyqt4-dev-tools python
  
 RUN pip install six
 ENV USER root
-RUN locale-gen
 COPY vnc_xstartup /root/.vnc/xstartup
 ENV LD_LIBRARY_PATH=/root/mesa/lib
 RUN echo "LD_LIBRARY_PATH=/root/mesa/lib" >> $HOME/.bashrc
