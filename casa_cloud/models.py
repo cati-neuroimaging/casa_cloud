@@ -53,7 +53,7 @@ class LocalPorts(object):
 class Machines(object):
     def __init__(self, local_ports, settings):
         self.db_path = settings["sqlite_data"]
-        self.image_name = settings["docker_image_name"]
+        self.image_names = eval(settings["docker_image_names"])
         self.exposed_port = int(settings["docker_image_exposed_port"])
         self.noVNC_dir_in_container = settings["docker_image_novnc_dir"]
         dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -70,7 +70,7 @@ class Machines(object):
         for sql in sqls:
             c.execute(sql)
 
-    def __create_docker_container(self, available_port, cpu_cores, memory, password, additional_options=""):
+    def __create_docker_container(self, available_port, cpu_cores, memory, password, image, additional_options=""):
         mem_limit = "%dg" % memory
         client = docker.from_env()
         ports = {}
@@ -79,7 +79,7 @@ class Machines(object):
         cmd = ["docker", "run", "-d", ]
         if additional_options != "":
             cmd += additional_options.split(" ")
-        cmd += ["--cpus", str(cpu_cores), "--memory", mem_limit, "-p", "%d:%d" % (int(available_port), self.exposed_port), self.image_name]
+        cmd += ["--cpus", str(cpu_cores), "--memory", mem_limit, "-p", "%d:%d" % (int(available_port), self.exposed_port), self.image_names[image]]
         out = subprocess.check_output(cmd)
         lines = out.split()
         container_id = lines[-1].strip()
@@ -94,17 +94,17 @@ class Machines(object):
         out = subprocess.check_output(cmd)
         return container_id
 
-    def create_docker_container(self, available_port, cpu_cores, memory, password, additional_options=""):
-        container_id = self.__create_docker_container(available_port, cpu_cores, memory, password, additional_options=additional_options)
+    def create_docker_container(self, available_port, cpu_cores, memory, password, image, additional_options=""):
+        container_id = self.__create_docker_container(available_port, cpu_cores, memory, password, image, additional_options=additional_options)
         return container_id
 
-    def create_machine(self, login, cpu_cores, memory, expiry_date, additional_options=""):
+    def create_machine(self, login, cpu_cores, memory, expiry_date, image, additional_options=""):
         cpu_cores = int(cpu_cores)
         memory = int(memory)
         vnc_pw = generate_temp_password(8)
         ## create a container 
         available_port = self.local_ports.allocate()
-        container_id = self.create_docker_container(available_port, cpu_cores, memory, password=vnc_pw, additional_options=additional_options)
+        container_id = self.create_docker_container(available_port, cpu_cores, memory, password=vnc_pw, image=image, additional_options=additional_options)
         #container_id = container.id
         sql = "INSERT INTO user_machines VALUES ('%(login)s', %(available_port)d, '%(container_id)s', %(memory)d, %(cpu_cores)d, '%(expiry_date)s', '%(vnc_pw)s')"
         data = {}

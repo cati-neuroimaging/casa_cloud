@@ -43,8 +43,12 @@ def view_home(request):
     min_days_to_use = int(request.registry.settings["min_days_to_use"])
     docker_container_create_lock_file = request.registry.settings["docker_container_create_lock_file"]
     docker_container_max_num_containers = int(request.registry.settings["docker_container_max_num_containers"])
-    can_add_machine = True
+    images_settings = eval(request.registry.settings["docker_image_names"])
+    images = []
+    for image_key in images_settings:
+        images.append(image_key)
 
+    can_add_machine = True
     is_lock_create_machine = False
     if os.path.isfile(docker_container_create_lock_file):
         lock_data = json.load(open(docker_container_create_lock_file, "r"))
@@ -76,10 +80,12 @@ def view_home(request):
                cpu_cores = request.POST["cpu_cores"]
                memory = request.POST["memory"]
                expiry_date = parse(request.POST["expiry_date"])
+               image = request.POST["image"]
+
                diff_time = datetime.now() - expiry_date
                if diff_time.days < min_days_to_use:
                    additional_options = request.registry.settings.get("docker_container_start_opts", "")
-                   machines.create_machine(login, cpu_cores, memory, expiry_date, additional_options)
+                   machines.create_machine(login, cpu_cores, memory, expiry_date, image, additional_options)
                else:
                    is_success = False
                    error_message = "You should use at least %d days" % min_days_to_use
@@ -100,6 +106,7 @@ def view_home(request):
              "memory_options": range(1, max_memory + 1),
              "is_success" : is_success,
              "error_message": error_message,
+             "images": images,
            }
 
 @view_config(route_name='login', 

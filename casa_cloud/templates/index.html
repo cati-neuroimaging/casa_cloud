@@ -33,6 +33,14 @@
               {% endfor %}
             </select>
           </div>
+          <div class="form-group">
+            <label for="image">Image</label>
+            <select class="form-control" id="image" name="image">
+              {% for image in images %}
+                  <option value="{{image}}">{{image}}</option>
+              {% endfor %}
+            </select>
+          </div>
           <button type="submit" class="btn btn-primary btn-large">Add Machine</button><p></p>
           <p>Wait for 5 seconds to click connect after creation.</p>
           <p>If you cannot connect to the machine, please delete and re-create a new machine.</p>
