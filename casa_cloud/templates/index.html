@@ -78,7 +78,7 @@
                             <p>CPU Cores {{machine.cpu_cores}}, Memory {{machine.memory}} G</p>
                             <p>
                                 <input type="hidden" name="del_machine_port" value={{ machine.container_port }}>
-                                <button type="submit" class="btn btn-primary btn-large">Delete</button> <a href="/novnc_{{machine.container_port}}/vnc_casa.html?port={{machine.container_port}}&token={{machine.vnc_pw}}" class="btn btn-default" target="_blank">Connect</a>
+                                <button type="submit" class="btn btn-primary btn-large">Delete</button> <a href="/novnc_{{machine.container_port}}/vnc_casa.html?port={{machine.container_port}}&token={{machine.vnc_pw}}&title={{title}}" class="btn btn-default" target="_blank">Connect</a>
                             </p>
                         </div>
                     </div>

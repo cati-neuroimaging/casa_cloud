@@ -44,6 +44,7 @@ def view_home(request):
     docker_container_create_lock_file = request.registry.settings["docker_container_create_lock_file"]
     docker_container_max_num_containers = int(request.registry.settings["docker_container_max_num_containers"])
     images_settings = eval(request.registry.settings["docker_image_names"])
+    title = request.registry.settings["website_title"]
     images = []
     for image_key in images_settings:
         images.append(image_key)
@@ -107,6 +108,7 @@ def view_home(request):
              "is_success" : is_success,
              "error_message": error_message,
              "images": images,
+             "title": title,
            }
 
 @view_config(route_name='login', 
