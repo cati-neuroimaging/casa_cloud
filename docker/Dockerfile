@@ -36,6 +36,7 @@ RUN apt-get update && apt-get install -y python net-tools pyqt4-dev-tools python
 RUN pip install six
 ENV USER root
 COPY vnc_xstartup /root/.vnc/xstartup
+COPY xfce4 /root/.config/xfce4
 ENV LD_LIBRARY_PATH=/root/mesa/lib
 RUN echo "LD_LIBRARY_PATH=/root/mesa/lib" >> $HOME/.bashrc
 COPY docker_entrypoint /root/docker_entrypoint
