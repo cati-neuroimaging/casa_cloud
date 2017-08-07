@@ -22,11 +22,8 @@
     <script src="{{request.registry.settings.website_base_url}}/static/js/jquery-ui.min.js"></script>
     <link href="{{request.registry.settings.website_base_url}}/static/css/jquery-ui.min.css" rel="stylesheet" type="text/css">
 
-
     <!-- Bootstrap Core JavaScript -->
     <script src="{{request.registry.settings.website_base_url}}/static/js/bootstrap.min.js"></script>
-
-
 
     <script>
 
@@ -42,9 +39,15 @@
      function initParameters() {
         var dat = new Date();
         dat.setDate(dat.getDate() + 12);
-        document.getElementById('expiry_date').valueAsDate = dat;        
+        //document.getElementById('expiry_date').valueAsDate = dat;        
         //if (!Modernizr.inputtypes.date) {
-        $("#expiry_date").datepicker({ dateFormat: 'dd/mm/yy'}); 
+        $("#expiry_date").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy',
+            defaultDate: new Date(2017, 01, 01)
+        });
+        $('#expiry_date').datepicker("setDate", dat); 
         //}
         
      }
