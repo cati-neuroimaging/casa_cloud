@@ -17,6 +17,17 @@
     <!-- Custom CSS -->
     <link href="{{request.registry.settings.website_base_url}}/static/css/heroic-features.css" rel="stylesheet">
 
+    <!-- jQuery -->
+    <script src="{{request.registry.settings.website_base_url}}/static/js/jquery.js"></script>
+    <script src="{{request.registry.settings.website_base_url}}/static/js/jquery-ui.min.js"></script>
+    <link href="{{request.registry.settings.website_base_url}}/static/css/jquery-ui.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{request.registry.settings.website_base_url}}/static/js/bootstrap.min.js"></script>
+
+
+
     <script>
 
      // called when mouse over
@@ -28,12 +39,17 @@
      	o.type = "password";
      }
 
-    function initParameters() {
+     function initParameters() {
         var dat = new Date();
         dat.setDate(dat.getDate() + 12);
         document.getElementById('expiry_date').valueAsDate = dat;        
-    }
-    window.onload = initParameters;
+        //if (!Modernizr.inputtypes.date) {
+        $("#expiry_date").datepicker({ dateFormat: 'dd/mm/yy'}); 
+        //}
+        
+     }
+
+     window.onload = initParameters;
 
     </script>
 
@@ -193,12 +209,6 @@
 
     </div>
     <!-- /.container -->
-
-    <!-- jQuery -->
-    <script src="static/js/jquery.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="static/js/bootstrap.min.js"></script>
 
 </body>
 
