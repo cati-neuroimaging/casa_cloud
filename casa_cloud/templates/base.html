@@ -41,13 +41,17 @@
         dat.setDate(dat.getDate() + 12);
         //document.getElementById('expiry_date').valueAsDate = dat;        
         //if (!Modernizr.inputtypes.date) {
-        $("#expiry_date").datepicker({
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: 'dd/mm/yy',
-            defaultDate: new Date(2017, 01, 01)
-        });
-        $('#expiry_date').datepicker("setDate", dat); 
+        if ( $('[type="date"]').prop('type') != 'date' ) {
+            $("#expiry_date").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd/mm/yy',
+                defaultDate: new Date(2017, 01, 01)
+            });
+            $('#expiry_date').datepicker("setDate", dat); 
+        }else{
+            document.getElementById('expiry_date').valueAsDate = dat;
+        }
         //}
         
      }
